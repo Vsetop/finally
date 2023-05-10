@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <textarea id = "name"></textarea>
+	<textarea id = "pass"></textarea>
+	<button onclick="singup()">Sing up</button>
+	<button onclick="login()">Log in</button>
+    <script>
+        let get
+        let names = [];
+  	    let pass = [];
+        function login() {
+    let name = document.getElementById("name").value;
+    let passs = document.getElementById("pass").value;
+
+    let per = 0;
+
+	for(let i = 0; i <= names.length && i <= pass.length; i++){
+		if(name == names[i] && passs == pass[i]){
+			per = 1;
+		}
+	}
+    if (per == 1) {
+      alert("Вход одобрен");
+    } else {
+      alert("Вход отклонен");
+    }
+    }
+        function singup() {
+    let name = document.getElementById("name").value;
+    let passs = document.getElementById("pass").value;
+
+    let nameTaken = names.includes(name);
+
+    if (!nameTaken) {
+      names.push(name);
+      pass.push(passs);
+      alert("Регистрация завершена");
+    } 
+	else {
+        alert("Регистрация не завершена");
+    }
+  }
+        let arr1 = []
+        let arr1_1 = []
+        let arr2 = []
+        let arr2_2 = []
+        let arr3 = []
+        let arr3_3 = []
+        let arr4 = []
+        let arr4_4 = []
+
+        function getMonthFromDate(dateString) {
+                let date = new Date(dateString);
+                let month = date.getMonth() + 1;
+                return month;}
+        class spend{
+            constructor(month, category, amount){
+                this.month = month
+                this.category = category
+                this.amount = amount
+            }
+        }
+        class second_spend{
+            constructor(month, category, amount){
+                this.month = month
+                this.category = category
+                this.amount = amount
+            }
+        }
+        class badtrip{
+            constructor(amount){
+                this.amount = amount
+        }}
+        class second_badtrip{
+            constructor(amount){
+                this.amount = amount
+        }}
+        class balance{
+            constructor(balance){
+                this.balance = balance
+            }
+        }
+        class second_balance{
+            constructor(balance){
+                this.balance = balance
+            }
+        }
+        class person{
+            constructor(name, password){
+                this.name = name                   
+                this.password = password
+            }
+        }
+    function addData(card, month, category, amount, type) {
+  let data = localStorage.getItem(`card_${card}_${type}`);
+  data = data ? JSON.parse(data) : [];
+  let monthFormatted = getMonthFromDate(month);
+  data.push({ month: monthFormatted, category, amount });
+  localStorage.setItem(`card_${card}_${type}`, JSON.stringify(data));
+}
+
+function getData(card, type) {
+  let data = localStorage.getItem(`card_${card}_${type}`);
+  return data ? JSON.parse(data) : [];
+}
+
+function getTotalExpenses(card, type) {
+  let expenses = getData(card, type);
+  return expenses.reduce((sum, expense) => sum + expense.amount, 0);
+}
+
+function getCategoriesTotalExpenses(card, type) {
+  let expenses = getData(card, type);
+  let categories = {};
+  expenses.forEach(expense => {
+    if (categories[expense.category]) {
+      categories[expense.category] += expense.amount;
+    } else {
+      categories[expense.category] = expense.amount;
+    }
+  });
+  return categories;
+}
+
+function getCategoriesPercentages(card, type) {
+  let totalExpenses = getTotalExpenses(card, type);
+  let categories = getCategoriesTotalExpenses(card, type);
+  let percentages = {};
+  Object.entries(categories).forEach(([category, amount]) => {
+    percentages[category] = (amount / totalExpenses) * 100;
+  });
+  return percentages;
+}
+function getSortedCategoriesByPercentages(card, type) {
+  let percentages = getCategoriesPercentages(card, type);
+  return Object.keys(percentages).sort((a, b) => percentages[b] - percentages[a]);
+}
+
+function getPredictedData(card, type) {
+  let expenses = getData(card, type);
+  let totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+  let predictedExpenses = totalExpenses * 0.5;
+  let badTrips = getData(card, "badtrip");
+  let totalBadTrips = badTrips.reduce((sum, expense) => sum + expense.amount, 0);
+  let predictedBadTrips = totalBadTrips * 0.5;
+  return { predictedExpenses, predictedBadTrips };
+}
+addData(1, "2021-01-01", "food", 50, "spend");
+let expenses = getData(1, "spend");
+let totalExpenses = getTotalExpenses(1, "spend");
+let categoriesTotalExpenses = getCategoriesTotalExpenses(1, "spend");
+let categoriesPercentages = getCategoriesPercentages(1, "spend");
+let sortedCategoriesByPercentages = getSortedCategoriesByPercentages(1, "spend");
+let predictedData = getPredictedData(1, "spend");
+</script>
+</body>
+</html>
